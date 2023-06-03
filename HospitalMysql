@@ -1,0 +1,236 @@
+create database if not exists Hospital;
+use hospital;
+
+create table if not exists receita (
+`id_Receita` int PRIMARY KEY AUTO_INCREMENT,
+`paciente`varchar (255),
+`medicamento` varchar (50),
+`medico` varchar (255)
+);
+
+create table if not exists consulta (
+`id_consulta` int PRIMARY KEY AUTO_INCREMENT,
+`id_Especialidade` int,
+`id_medico` varchar(255),
+`id_paciente` varchar(255),
+`valor` float,
+`data_consulta` timestamp,
+`id_receita` int,
+`medicamentos` varchar (50),
+foreign key (id_receita) references receita (id_receita)
+);
+
+create table if not exists paciente (
+`id_paciente` int PRIMARY KEY AUTO_INCREMENT,
+`nome` varchar (255),
+`CPF`int,
+`RG` int (9),
+`data_de_nascimento` date,
+`telefone` int (11),
+`gmail` varchar (300),
+`id_convenio` int,
+foreign key (id_paciente) references consulta (id_paciente)
+);
+
+create table if not exists convenio (
+`id_assinante` int PRIMARY KEY AUTO_INCREMENT,
+`CPF`int,
+`RG` int,
+`endereco_residencial` varchar (400),
+`telefone` varchar (13),
+`tempo_carencia` date,
+`CNPJ` varchar (15),
+`tipo_convenio` varchar (50),
+foreign key (id_assinante) references paciente (id_convenio)
+); 
+
+create table if not exists enfermeiro (
+`id_enfermeiro` int PRIMARY KEY AUTO_INCREMENT,
+`Nome` varchar (255),
+`CPF`int,
+`CRE` int,
+foreign key (id_enfermeiro) references paciente (id_paciente)
+);
+
+
+CREATE TABLE IF NOT EXISTS tipo_quarto (
+  `id_quarto` int PRIMARY KEY AUTO_INCREMENT,
+  `descricao` varchar(255),
+  `valor_diaria` float
+);
+
+CREATE TABLE IF NOT EXISTS quarto (
+  `id_quarto` int PRIMARY KEY AUTO_INCREMENT,
+  `numero_do_quarto` int,
+  `tipo_do_quarto` int
+);
+
+CREATE TABLE IF NOT EXISTS internacao (
+  `id_internacao` int primary key auto_increment,
+  `data_de_entrada` timestamp,
+  `data_prev_de_alta` timestamp,
+  `data_efetiva_alta` timestamp,
+  `procedimentos` varchar (300),
+  `id_enfermeiro`int,
+  `id_paciente`int
+);
+
+CREATE TABLE IF NOT EXISTS especialidade (
+   `id_Especialidade` int primary key auto_increment,
+   `Nome` varchar (255)
+);
+
+CREATE TABLE IF NOT EXISTS `medico` (
+    `id_medico` int PRIMARY KEY AUTO_INCREMENT,
+    `especialidade` int,
+    `nome` varchar(255),
+    `CPF` varchar(255),
+    `CRM` int,
+    `telefone` varchar(40),
+    `gmail` varchar(250),
+	FOREIGN KEY (especialidade) REFERENCES `especialidade`(`id_Especialidade`)
+);
+ 
+ insert into `especialidade` (`Nome`) values
+('pediatria'),
+('clínica geral'),
+('gastrenterologia'),
+('Ginecologia'),
+('dermatologia'),
+('Oncologia'),
+('Otorrinolaringologia'),
+('Fisioterapeuta'),
+('Nutricionista'),
+('Cirurgião');
+
+ insert into `internacao` (`data_de_entrada` , `data_prev_de_alta` , `data_efetiva_alta` , `procedimentos`, `id_enfermeiro`, `id_paciente`) values
+('2017-02-10 10:00:00', '2017-03-10 10:00:0', '2017-03-10 10:00:0', 'Cirurgia cardíaca', '1', '8'),
+('2017-02-11 11:00:00', '2017-03-11 11:00:0', '2017-03-11 11:00:0', 'Cirurgia ortopédica', '2', '7'),
+('2017-02-12 12:00:00', '2017-03-12 12:00:0', '2017-03-12 12:00:0', 'Cirurgia gastrointestinal', '3', '6'),
+('2017-02-13 13:00:00', '2017-03-13 13:00:0', '2017-03-13 13:00:0', 'Cirurgia bariátrica', '4', '5'),
+('2017-02-14 14:00:00', '2017-03-14 14:00:0', '2017-03-14 14:00:0', 'Cirurgia plástica', '5', '5'),
+('2017-02-15 15:00:00', '2017-03-15 15:00:0', '2017-03-15 15:00:0', 'Cirurgia neurológica', '6', '4'),
+('2017-02-16 16:00:00', '2017-03-16 16:00:0', '2017-03-16 16:00:0', 'Cirurgia oftalmológica', '7', '4'),
+('2017-02-17 17:00:00', '2017-03-17 17:00:0', '2017-03-17 17:00:0', 'Cirurgia  urológica', '8', '3'),
+('2017-02-18 18:00:00', '2017-03-18 18:00:0', '2017-03-18 18:00:0', 'Cirurgia de cabeça e pescoço', '9', '2'),
+('2017-02-19 19:00:00', '2017-03-19 19:00:0', '2017-03-19 19:00:0', 'Cirurgia vascular', '10', '1');
+
+ insert into `quarto` (`numero_do_quarto`, `tipo_do_quarto`) values
+('201', '1'),
+('202', '2'),
+('203', '3'),
+('204', '4'),
+('205', '4'),
+('206', '3'),
+('207', '2'),
+('208', '1'),
+('209', '2'),
+('300', '3');
+
+ insert into `tipo_quarto` (`descricao`, `valor_diaria`) values
+('quarto Apartamento', '300.00'),
+('quarto Quarto duplo', '200.00'),
+('quarto enfermaria', '400.00');
+
+ insert into `enfermeiro` (`Nome`, `CPF`, `CRE`) values
+('Lucas', '123456789' , '12345'),
+('Ronaldo', '223456789', '22345'),
+('Gabriel', '323456789', '32345'),
+('João', '423456789', '42345'),
+('Maria', '523456789', '52345'),
+('pedro', '623456789', '62345'),
+('Nathalya', '723456789', '72345'),
+('Paulo', '823456789', '82345'),
+('Guylherme', '923456789', '92345'),
+('Gabriel', '123456781', '12346');
+
+ insert into `convenio` (`CPF`, `RG`, `endereco_residencial`, `telefone`, `tempo_carencia`, `CNPJ`, `tipo_convenio`) values
+('123456789', '12345678', 'Rua Almenida 01', '11 9123-4567', '2002-02-10', '1234537-8000101', 'Alice Saúde'),
+('223456789', '22345678', 'Rua Almenida 02', '11 9223-4567', '2002-02-11', '2234537-8000101', 'Allianz Saúde'),
+('323456789', '32345678', 'Rua Almenida 03', '11 9323-4567', '2002-02-12', '3234527-8000101', 'Ameplan Saúde'),
+('423456789', '42345678', 'Rua Almenida 04', '11 9423-4567', '2002-02-13', '4234557-8000101', 'Amil Facil'),
+('523456789', '52345678', 'Rua Almenida 05', '11 9523-4567', '2002-02-14', '5234567-7000101', 'Benevida'),
+('623456789', '62345678', 'Rua Almenida 06', '11 9623-4567', '2002-02-15', '6234567-8000101', 'Alice Saúde'),
+('723456789', '72345678', 'Rua Almenida 07', '11 9723-4567', '2002-02-16', '7234567-8000101', 'Allianz Saúde'),
+('823456789', '82345678', 'Rua Almenida 08', '11 9823-4567', '2002-02-17', '8234657-8000101', 'Amil Facil'),
+('923456789', '92345678', 'Rua Almenida 09', '11 9923-4567', '2002-02-18', '9234566-8000101', 'Allianz Saúde'),
+('123456781', '12345671', 'Rua Almenida 10', '11 9123-4568', '2002-02-19', '1234567-7800102', 'Alice Saúde');
+
+ insert into `paciente` (`Nome`, `CPF`, `RG`, `data_de_nascimento`, `telefone`, `gmail`, `id_convenio`) values
+('Raquel', '123453789', '12545648', '1980-03-10', '1164521897', 'Raquel@gmail.com', '1'),
+('Paulo', '123556789', '12345658', '1980-03-11', '1164521897', 'Paulo@gmail.com', '2'),
+('Rafael', '123456789', '12535678', '1980-03-12', '1164521897', 'Rafael@gmail.com', '3'),
+('Diogo', '123456689', '12345678', '1980-03-13', '1164521897', 'Diogo@gmail.com', '4'),
+('Felipe', '123446789', '15345678', '1980-03-14', '1164521897', 'Felipe@gmail.com', '5'),
+('Luciano', '123456739', '14345678', '1980-03-15', '1164521897', 'Luciano@gmail.com', '6'),
+('Manuela', '121456789', '12345658', '1980-03-16', '1164521897', 'Manuela@gmail.com', '7'),
+('Fernanda', '123455789', '22345675', '1980-03-17', '1164521897', 'Fernanda@gmail.com', '8'),
+('Isabela', '623456789', '16545678', '1980-03-18', '1164521897', 'Isabela@gmail.com', '9'),
+('Iraci', '123454789', '12347578', '1980-03-19', '1164521897', 'Iraci@gmail.com', '10'),
+('Everaldo', '123452739', '12545678', '1980-03-15', '1164524897', 'Luciano@gmail.com', '6'),
+('Samuel', '121646789', '12345658', '1980-03-16', '1144521847', 'Manuela@gmail.com', '7'),
+('Josefh', '123425789', '52345678', '1980-03-17', '1164421897', 'Fernanda@gmail.com', '8'),
+('Carol', '623756789', '16355678', '1980-03-18', '1164521847', 'Isabela@gmail.com', '9'),
+('Junior', '123451789', '12347658', '1980-03-19', '1164521893', 'Iraci@gmail.com', '10');
+
+ insert into `receita` (`paciente`, `medicamento`, `medico`) values
+('Valentine', 'Paracetamol', 'Carlos'),
+('Luiz', 'Ibuprofeno', 'Jhon'),
+('Fernanda', 'Amoxicilina', 'Henrique'),
+('Rafaela', 'Omeprazol', 'Pablo'),
+('Juliana', 'Atorvastatina', 'Willian'),
+('Ana', 'Metformina', 'Raphael'),
+('Thiago', 'Dipirona', 'Carla'),
+('Matheus', 'Loratadina', 'Melina'),
+('Priscila', 'Sertralina', 'José'),
+('Marcela', 'Ranitidina', 'Monica');
+
+ insert into `consulta` (`id_Especialidade`, `id_medico`, `id_paciente`, `valor`, `data_consulta`, `id_receita`, `medicamentos`) values
+('1', '1', '10', '100', '2015-01-01 13:00', '1', 'Paracetamol & Ibuprofeno'),
+('2', '2', '20', '110', '2015-01-02 20:00', '2', 'Paracetamol & Amoxicilina'),
+('3', '3', '30', '120', '2015-01-03 11:00', '3', 'Paracetamol & Omeprazol'),
+('4', '4', '40', '130', '2015-01-04 12:00', '4', 'Paracetamol & Atorvastatina'),
+('5', '5', '50', '120', '2015-01-05 20:00', '5', 'Paracetamol & Metformina'),
+('6', '6', '60', '110', '2015-01-06 19:00', '6', 'Paracetamol & Dipirona'),
+('7', '7', '70', '100', '2015-01-07 18:00', '7', 'Paracetamol & Loratadina'),
+('8', '8', '80', '110', '2015-01-08 17:00', '8', 'Paracetamol & Sertralina'),
+('9', '9', '90', '120', '2015-01-09 15:00', '9', 'Paracetamol & Ranitidina'),
+('10', '10', '100', '130', '2015-01-10 14:00', '10', 'Ibuprofeno'),
+('11', '11', '110', '100', '2015-01-11 13:00', '11', 'Amoxicilina'),
+('12', '12', '120', '110', '2015-01-12 20:00', '12', 'Omeprazol'),
+('13', '13', '130', '120', '2015-01-13 11:00', '13', 'Atorvastatina'),
+('14', '14', '140', '130', '2015-01-14 12:00', '14', 'Metformina'),
+('15', '15', '150', '120', '2015-01-15 20:00', '15', 'Dipirona'),
+('16', '16', '160', '110', '2015-01-16 19:00', '16', 'Loratadina'),
+('17', '17', '170', '100', '2015-01-17 18:00', '17', 'Sertralina'),
+('18', '18', '180', '110', '2015-01-18 17:00', '18', 'Ranitidina'),
+('19', '19', '190', '120', '2015-01-19 15:00', '19', 'Codeína'),
+('20', '20', '200', '130', '2015-01-20 14:00', '20', 'Oxicodona');
+
+ insert into `medico` (`nome`, `CPF`, `telefone`) values
+ ('Katia', '123413789', '11 9123-4568'),
+ ('Carolinny', '122453789', '11 9123-4577'),
+ ('Otavio', '123355789', '11 9123-4557'),
+ ('Junior', '123673789', '11 9123-4547'),
+ ('José', '123457588', '11 9123-4537'),
+ ('Paola', '123456689', '11 9123-4527'),
+ ('Leonardo', '123457789', '11 9123-4517'),
+ ('Luciana', '133483789', '11 9123-4507'),
+ ('Luciana', '123953784', '11 9123-4267'),
+ ('Cintia', '123450783', '11 9123-4467');
+ 
+ 
+ -- atividade 4
+ 
+ ALTER TABLE medico ADD COLUMN em_atividade VARCHAR(20);
+UPDATE medico SET em_atividade = 'Inativo' WHERE id_medico = 1;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 2;
+UPDATE medico SET em_atividade = 'Inativo' WHERE id_medico = 3;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 4;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 5;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 6;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 7;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 8;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 9;
+UPDATE medico SET em_atividade = 'Em atividade' WHERE id_medico = 10;
+ALTER TABLE medico ALTER COLUMN em_atividade SET DEFAULT 'Em atividade';
